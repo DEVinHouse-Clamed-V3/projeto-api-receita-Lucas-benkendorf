@@ -28,4 +28,17 @@ export class RecipeController {
       await queryRunner.release();
     }
   }
+  
+  async listAll(request: Request, response: Response): Promise<Response> {
+    try {
+      const recipes = await AppDataSource.getRepository(Receita).find({
+        relations: ["ingredients", "steps"],
+      });
+
+      return response.status(200).json(recipes);
+    } catch (error) {
+      return response.status(500).json({ message: "Erro ao listar receitas", error });
+    }
+  }
 }
+
